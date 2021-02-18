@@ -7,18 +7,17 @@ class PaknError {
   }
 }
 
-interface MinProps {
+export interface MinProps {
   children: string;
 }
 
-export const createElement = <T extends MinProps>(
+const createElement = <T extends MinProps>(
   name: string,
   component: (props: T) => string,
   styles?: string
-) => {
+): string | never => {
   if (!name.match(nameRegEx)) {
     throw new PaknError('Element Name not valid');
-    return;
   }
   class Component extends HTMLElement {
     styles: string;
@@ -53,4 +52,18 @@ export const createElement = <T extends MinProps>(
     }
   }
   customElements.define(name, Component);
+  return name;
+};
+
+const render = (name: string, element: HTMLElement | null) => {
+  if (!element) {
+    throw new PaknError('Element not found');
+  } else {
+    element.innerHTML = `<${name}></${name}>`;
+  }
+};
+
+export const Pakn = {
+  createElement,
+  render,
 };
