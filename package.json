@@ -1,13 +1,15 @@
 {
   "name": "pakn",
-  "version": "1.0.0",
-  "main": "index.js",
-  "author": "Martin Munilla <martinmunillas@gmail.com>",
+  "version": "1.0.1",
+  "author": "martinmunilla",
   "license": "MIT",
   "scripts": {
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "build": "tsc"
   },
   "devDependencies": {
     "typescript": "^4.1.5"
-  }
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts"
 }
