@@ -1,17 +1,6 @@
-const nameRegEx = /[a-z]-[a-z]/;
+import { MinProps, nameRegEx, PaknError } from './extras';
 
-class PaknError {
-  message: string;
-  constructor(message: string) {
-    this.message = message;
-  }
-}
-
-export interface MinProps {
-  children: string;
-}
-
-const createElement = <T extends MinProps>(
+export const createElement = <T extends MinProps>(
   name: string,
   component: (props: T) => string,
   styles?: string
@@ -30,16 +19,20 @@ const createElement = <T extends MinProps>(
       this.styles = styles || '';
       this.myAttributes = this.getAttributeNames();
       this.myAttributes.forEach((attribute) => {
-        this.props[attribute] = this.getAttribute(attribute);
+        let att = this.getAttribute(attribute);
+        try {
+          att = JSON.parse(att!.replace(/'/g, '"'));
+        } catch {}
+        this.props[attribute] = att;
       });
     }
 
     getTemplate() {
       const template = document.createElement('template');
       template.innerHTML = `
-          ${component({ ...this.props, children: '<slot></slot>' } as T)}
-          <style>${this.styles}</style>
-          `;
+            ${component({ ...this.props, children: '<slot></slot>' } as T)}
+            <style>${this.styles}</style>
+            `;
       return template;
     }
 
@@ -53,17 +46,4 @@ const createElement = <T extends MinProps>(
   }
   customElements.define(name, Component);
   return name;
-};
-
-const render = (name: string, element: HTMLElement | null) => {
-  if (!element) {
-    throw new PaknError('Element not found');
-  } else {
-    element.innerHTML = `<${name}></${name}>`;
-  }
-};
-
-export const Pakn = {
-  createElement,
-  render,
 };
