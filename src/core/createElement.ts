@@ -1,36 +1,28 @@
-import { MinProps, nameRegEx, PaknError } from './extras';
+import { ComponentName, MinProps, nameRegEx, PaknError, Props } from './extras';
 
-export const createElement = <T extends MinProps>(
-  name: string,
+export const createElement = <T extends Props>(
+  name: ComponentName,
   component: (props: T) => string,
+  props?: T,
   styles?: string
 ): string | never => {
   if (!name.match(nameRegEx)) {
     throw new PaknError('Element Name not valid');
   }
   class Component extends HTMLElement {
-    styles: string;
-    myAttributes: string[];
-    props: any = {};
+    styles: string = styles || '';
+    myAttributes: string[] = this.getAttributeNames();
+    props: (T & MinProps) | MinProps = { ...props, children: '<slot></slot>' };
 
     constructor() {
       super();
       this.attachShadow({ mode: 'open' });
-      this.styles = styles || '';
-      this.myAttributes = this.getAttributeNames();
-      this.myAttributes.forEach((attribute) => {
-        let att = this.getAttribute(attribute);
-        try {
-          att = JSON.parse(att!.replace(/'/g, '"'));
-        } catch {}
-        this.props[attribute] = att;
-      });
     }
 
     getTemplate() {
       const template = document.createElement('template');
       template.innerHTML = `
-            ${component({ ...this.props, children: '<slot></slot>' } as T)}
+            ${component({ ...this.props } as T)}
             <style>${this.styles}</style>
             `;
       return template;

@@ -5,15 +5,7 @@ const file = fs.readFileSync(path.join(__dirname, '../src/helloWorld.pakn'), 'ut
 
 let outFile = '';
 
-let counter = 0;
-
-let finding = [];
-
-let i = file[0];
-
-const lines = file.split('\n');
-
 outFile += `import {createElement} from 'pakn';
 createElement('hello-world', (props) => \`${file.replace(/\|(.+)\|/, '${props.$1}')}\`)`;
 
-fs.writeFileSync(path.join(__dirname, '../build/helloWorld.js'), outFile);
+fs.writeFileSync(path.join(__dirname, '../src/helloWorld.js'), outFile);

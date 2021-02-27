@@ -11,5 +11,8 @@ export interface MinProps {
   children: string;
 }
 
+export type Props = {
+  [key: string]: any;
+};
 
-
+export type ComponentName = `${string}-${string}`

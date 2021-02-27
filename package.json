@@ -5,11 +5,16 @@
   "license": "MIT",
   "scripts": {
     "watch": "tsc -w",
-    "build": "tsc"
+    "build": "tsc",
+    "compile": "node ./build/compiler.js",
+    "play": "webpack -w"
   },
   "devDependencies": {
     "@types/node": "^14.14.31",
-    "typescript": "^4.1.5"
+    "ts-loader": "^8.0.17",
+    "typescript": "^4.1.5",
+    "webpack": "^5.24.2",
+    "webpack-cli": "^4.5.0"
   },
   "main": "build/index.js",
   "types": "build/index.d.ts",
